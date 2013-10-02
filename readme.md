@@ -5,4 +5,5 @@
 http://nullsecurity.net/tools/binary.html
 The directions how to compile it and get it working can be found on my blog here:
 http://secjohn.blogspot.com/2013/08/encrypting-payloads-with-smbexec-on.html
-In a nutshell, compile it (see link above for directions), name the executable crypter.exe and run updatedb so the locate command finds it.  Do that the script will find you have it and ask if you want to use it. 
+In a nutshell, compile it (see link above for directions), name the executable crypter.exe and run updatedb so the locate command finds it.  Do that the script will find you have it and ask if you want to use it. ### Update 10/2/2013
+I added an rc file creation into the script to save time.  It is called obfy.rc and will match whatever payload you picked if you use 1-4.  If you are doing a custom file you are on your own.  It does not launch an xterm and launch it.  I like managing my own windows.
