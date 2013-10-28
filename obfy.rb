@@ -94,7 +94,7 @@ case PAYLOAD
   when "1"
   payload_name = "windows/shell/reverse_tcp"
   when "2"
-  payload_name = "windows/meterpreter/reverse_:tcp"
+  payload_name = "windows/meterpreter/reverse_tcp"
   when "3"
   payload_name = "windows/meterpreter/reverse_https"
   when "4"
