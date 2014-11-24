@@ -184,22 +184,22 @@ unless payload_num == 6
   File.delete(asm_ghost) if File.file?(asm_ghost)
   File.delete(raw_file) if File.file?(raw_file)
     #Checking if crypter is installed and if so, offering to use it on the file
-  crypterpath = %x{locate -l 1 crypter.exe}.sub("crypter.exe", "").chomp
-  unless crypterpath.empty?
-    puts "Crypter was detected, do you want to use it on the new executable? Y/N"
-    crypt = gets.chomp
-    case crypt
-    when "Y", "y", "Yes", "yes"
-      exedir = Dir.pwd
-      Dir.chdir crypterpath
-      %x{wine crypter.exe #{exedir}"/"#{exe_file} #{exedir}"/"#{exe_crypt_file}}
-      puts "#{exe_crypt_file} was created as well, enjoy."
-    else
-      puts "Not using crypter."
-    end
-  else
-    puts "Crypter not detected, if you have it run updatedb so the script can locate it."
-  end
+  #crypterpath = %x{locate -l 1 crypter.exe}.sub("crypter.exe", "").chomp
+  #unless crypterpath.empty?
+  #  puts "Crypter was detected, do you want to use it on the new executable? Y/N"
+  #  crypt = gets.chomp
+  #  case crypt
+  #  when "Y", "y", "Yes", "yes"
+  #    exedir = Dir.pwd
+  #    Dir.chdir crypterpath
+  #    %x{wine crypter.exe #{exedir}"/"#{exe_file} #{exedir}"/"#{exe_crypt_file}}
+  #    puts "#{exe_crypt_file} was created as well, enjoy."
+  #  else
+  #    puts "Not using crypter."
+  #  end
+  #else
+  #  puts "Crypter not detected, if you have it run updatedb so the script can locate it."
+  #end
 else
   puts "New file #{asm_ghost} created."
 end
